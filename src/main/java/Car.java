@@ -7,7 +7,7 @@ public class Car {
     private String  brand;
     private String model;
     private int year;
-    private String vin_code;
+    private final String vin_code;
     private Client  owner;
 
     public Car(String vin_code, String brand, String model, int year, Client owner) {

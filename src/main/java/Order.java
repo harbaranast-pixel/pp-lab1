@@ -73,7 +73,7 @@ public class Order {
             throw new IllegalStateException(
                     "Invalid order status transition from " + this.status + " to " + status);
         }
-        if (status == StatusOrder.APPROVED && (tasks == null || task.isEmpty())) {
+        if (status == StatusOrder.APPROVED && (tasks == null || tasks.isEmpty())) {
             throw new IllegalStateException("An order must have at least one task before it can be approved");
         }
         if (status == StatusOrder.IN_PROGRESS) {
