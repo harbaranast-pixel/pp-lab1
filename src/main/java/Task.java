@@ -3,7 +3,7 @@ import java.math.BigDecimal;
 public class Task {
     private String description;
     private BigDecimal detail_price = BigDecimal.ZERO;
-    private BigDecimal whole_price = BigDecimal.ZERO;
+    private BigDecimal work_price = BigDecimal.ZERO;
     private StatusOrder status;
     private int time;
 
@@ -11,8 +11,8 @@ public class Task {
         return detail_price;
     }
 
-    public BigDecimal getWhole_price() {
-        return whole_price;
+    public BigDecimal getWork_price() {
+        return work_price;
     }
 
     public String getDescription() {
@@ -55,13 +55,13 @@ public class Task {
         this.time = time;
     }
 
-    public void setWhole_price(BigDecimal whole_price) {
-        if (whole_price == null) {
-            throw new IllegalArgumentException("Whole price cannot be null.");
+    public void setWork_price(BigDecimal work_price) {
+        if (work_price == null) {
+            throw new IllegalArgumentException("Work price cannot be null.");
         }
-        if (whole_price.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Whole price cannot be negative.");
+        if (work_price.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Work price cannot be negative.");
         }
-        this.whole_price = whole_price;
+        this.work_price = work_price;
     }
 }

@@ -34,7 +34,7 @@ public class Order {
             return total;
         }
         for (Task orderTask : task) {
-            total = total.add(orderTask.getDetail_price()).add(orderTask.getWhole_price());
+            total = total.add(orderTask.getDetail_price()).add(orderTask.getWork_price());
         }
         return total;
     }
