@@ -10,6 +10,21 @@ public class Car {
     private String vin_code;
     private Client  owner;
 
+    public Car(String vin_code, String brand, String model, int year, Client owner) {
+        if (vin_code == null || vin_code.isBlank()) {
+            throw new IllegalArgumentException("VIN code cannot be empty.");
+        }
+        if (USED_VIN_CODES.contains(vin_code)) {
+            throw new IllegalArgumentException("VIN code must be unique within the service.");
+        }
+        this.vin_code = vin_code;
+        USED_VIN_CODES.add(vin_code);
+
+        setBrand(brand);
+        setModel(model);
+        setYear(year);
+        setOwner(owner);
+    }
     public int getYear() {
         return year;
     }
@@ -35,42 +50,23 @@ public class Car {
     }
 
     public void setBrand(String brand) {
+        if (brand == null || brand.isBlank()) throw new IllegalArgumentException("Brand cannot be blank.");
         this.brand = brand;
     }
 
     public void setModel(String model) {
+        if (model == null || model.isBlank()) throw new IllegalArgumentException("Model cannot be blank.");
         this.model = model;
     }
 
-    public void setOwner(Client owner) {
-        this.owner = owner;
-    }
-
-    public void setVin_code(String vin_code) {
-        String validVin = vin_code == null ? null : vin_code.trim();
-
-        if (validVin == null || validVin.isEmpty()) {
-            throw new IllegalArgumentException("VIN code cannot be empty");
-        }
-
-        if (validVin.equals(this.vin_code)) {
-            return;
-        }
-
-        if (USED_VIN_CODES.contains(validVin)) {
-            throw new IllegalArgumentException("VIN code must be unique within the service");
-        }
-
-        if (this.vin_code != null) {
-            USED_VIN_CODES.remove(this.vin_code);
-        }
-
-        this.vin_code = validVin;
-        USED_VIN_CODES.add(validVin);
-    }
-
     public void setYear(int year) {
+        if (year < 1886) throw new IllegalArgumentException("Year is invalid."); // Перше авто створили у 1886 :)
         this.year = year;
+    }
+
+    public void setOwner(Client owner) {
+        if (owner == null) throw new IllegalArgumentException("Car must have an owner.");
+        this.owner = owner;
     }
 
 

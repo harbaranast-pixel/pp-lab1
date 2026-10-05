@@ -7,52 +7,58 @@ public class CarServiceDemo {
 
         CarService carService = new CarService();
 
-        Client client = new Client();
-        client.setName("Alex Morgan");
-        client.setPhone("555-0100");
+        Client client = new Client("Alex Morgan", "555-0100");
         carService.registerClient(client);
 
-        Car car = new Car();
-        car.setBrand("Toyota");
-        car.setModel("Corolla");
-        car.setYear(2022);
-        car.setVin_code("DEMO-CAR-001");
-        car.setOwner(client);
+        Car car = new Car("DEMO-CAR-001", "Toyota", "Corolla", 2022, client);
         carService.registerCar(car);
-        Mechanic mechanic = new Mechanic();
-        mechanic.setName("Jordan Lee");
-        mechanic.setSpecialization(Specialization.ENGINE);
+
+        Mechanic mechanic = new Mechanic("Jordan Lee");
         carService.registerMechanic(mechanic);
 
-        Task oilChange = createTask("Oil change", "35.50", "10.00");
-        Task brakeService = createTask("Brake service", "120.00", "45.75");
+        Order completedOrder = carService.createOrder(car, client);
 
-        Order completedOrder = new Order();
-        completedOrder.setCar(car);
-        completedOrder.setClient(client);
-        completedOrder.setTask(List.of(oilChange, brakeService));
+        Task oilChange = new Task("Oil change", new BigDecimal("35.50"), new BigDecimal("10.00"));
+        Task brakeService = new Task("Brake service", new BigDecimal("120.00"), new BigDecimal("45.75"));
+
+        completedOrder.addTask(oilChange);
+        completedOrder.addTask(brakeService);
+
         completedOrder.setStatus(StatusOrder.DIAGNOSED);
         completedOrder.setStatus(StatusOrder.APPROVED);
         completedOrder.setMechanic(mechanic);
         completedOrder.setStatus(StatusOrder.IN_PROGRESS);
+
         oilChange.setStatus(StatusOrder.COMPLETED);
         brakeService.setStatus(StatusOrder.COMPLETED);
         completedOrder.setStatus(StatusOrder.COMPLETED);
+
         System.out.println("Total cost: " + completedOrder.calculateTotalCost());
 
-        System.out.println("\nNEGATIVE 1: APPROVE EMPTY ORDER ");
+
+        System.out.println("\nNEGATIVE 1: COORDINATOR BLOCKS UNREGISTERED CAR ");
         try {
-            Order emptyOrder = new Order();
+            Client unregisteredClient = new Client("Ghost", "000");
+            Car unregisteredCar = new Car("GHOST-VIN", "BMW", "X5", 2020, unregisteredClient);
+            // Спроба створити замовлення без попередньої реєстрації в CarService
+            carService.createOrder(unregisteredCar, unregisteredClient);
+        } catch (IllegalArgumentException exception) {
+            System.out.println(exception.getMessage());
+        }
+
+        System.out.println("\nNEGATIVE 2: APPROVE EMPTY ORDER ");
+        try {
+            Order emptyOrder = carService.createOrder(car, client);
             emptyOrder.setStatus(StatusOrder.DIAGNOSED);
             emptyOrder.setStatus(StatusOrder.APPROVED);
         } catch (IllegalStateException exception) {
             System.out.println(exception.getMessage());
         }
 
-        System.out.println("\nNEGATIVE 2: START WITHOUT A MECHANIC ");
+        System.out.println("\nNEGATIVE 3: START WITHOUT A MECHANIC ");
         try {
-            Order orderWithoutMechanic = new Order();
-            orderWithoutMechanic.setTask(List.of(createTask("Inspection", "20.00", "0.00")));
+            Order orderWithoutMechanic = carService.createOrder(car, client);
+            orderWithoutMechanic.addTask(new Task("Inspection", new BigDecimal("20.00"), new BigDecimal("0.00")));
             orderWithoutMechanic.setStatus(StatusOrder.DIAGNOSED);
             orderWithoutMechanic.setStatus(StatusOrder.APPROVED);
             orderWithoutMechanic.setStatus(StatusOrder.IN_PROGRESS);
@@ -60,17 +66,17 @@ public class CarServiceDemo {
             System.out.println(exception.getMessage());
         }
 
-        System.out.println("\nNEGATIVE 3: ASSIGN MECHANIC TO TWO ACTIVE ORDERS ");
+        System.out.println("\nNEGATIVE 4: ASSIGN MECHANIC TO TWO ACTIVE ORDERS ");
         try {
-            Order firstActiveOrder = new Order();
-            firstActiveOrder.setTask(List.of(createTask("Engine repair", "200.00", "80.00")));
+            Order firstActiveOrder = carService.createOrder(car, client);
+            firstActiveOrder.addTask(new Task("Engine repair", new BigDecimal("200.00"), new BigDecimal("80.00")));
             firstActiveOrder.setStatus(StatusOrder.DIAGNOSED);
             firstActiveOrder.setStatus(StatusOrder.APPROVED);
             firstActiveOrder.setMechanic(mechanic);
             firstActiveOrder.setStatus(StatusOrder.IN_PROGRESS);
 
-            Order secondOrder = new Order();
-            secondOrder.setTask(List.of(createTask("Tire change", "40.00", "0.00")));
+            Order secondOrder = carService.createOrder(car, client);
+            secondOrder.addTask(new Task("Tire change", new BigDecimal("40.00"), new BigDecimal("0.00")));
             secondOrder.setStatus(StatusOrder.DIAGNOSED);
             secondOrder.setStatus(StatusOrder.APPROVED);
             secondOrder.setMechanic(mechanic);
@@ -79,20 +85,11 @@ public class CarServiceDemo {
             System.out.println(exception.getMessage());
         }
 
-        System.out.println("\nNEGATIVE 4: INVALID STATUS TRANSITION ");
+        System.out.println("\nNEGATIVE 5: INVALID STATUS TRANSITION ");
         try {
-            new Order().setStatus(StatusOrder.COMPLETED);
+            carService.createOrder(car, client).setStatus(StatusOrder.COMPLETED);
         } catch (IllegalStateException exception) {
             System.out.println(exception.getMessage());
         }
-    }
-
-    private static Task createTask(String description, String detailPrice, String workPrice) {
-        Task task = new Task();
-        task.setDescription(description);
-        task.setDetail_price(new BigDecimal(detailPrice));
-        task.setWork_price(new BigDecimal(workPrice));
-        return task;
-
     }
 }

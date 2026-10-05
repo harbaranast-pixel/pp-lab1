@@ -7,6 +7,11 @@ public class Task {
     private StatusOrder status;
     private int time;
 
+    public Task(String description, BigDecimal detail_price, BigDecimal work_price) {
+        setDescription(description);
+        setDetail_price(detail_price);
+        setWork_price(work_price);
+    }
     public BigDecimal getDetail_price() {
         return detail_price;
     }
@@ -28,15 +33,15 @@ public class Task {
     }
 
     public void setDescription(String description) {
+        if (description == null || description.isBlank()) {
+            throw new IllegalArgumentException("Description cannot be blank.");
+        }
         this.description = description;
     }
 
     public void setDetail_price(BigDecimal detail_price) {
-        if (detail_price == null) {
-            throw new IllegalArgumentException("Detail price cannot be null.");
-        }
-        if (detail_price.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Detail price cannot be negative.");
+        if (detail_price == null || detail_price.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Detail price cannot be null or negative.");
         }
         this.detail_price = detail_price;
     }
@@ -56,11 +61,8 @@ public class Task {
     }
 
     public void setWork_price(BigDecimal work_price) {
-        if (work_price == null) {
-            throw new IllegalArgumentException("Work price cannot be null.");
-        }
-        if (work_price.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Work price cannot be negative.");
+        if (work_price == null || work_price.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Work price cannot be null or negative.");
         }
         this.work_price = work_price;
     }

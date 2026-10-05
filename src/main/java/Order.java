@@ -4,10 +4,31 @@ import java.util.List;
 
 public class Order {
     private Car car;
-    private List<Task> task;
+    private List<Task> tasks = new ArrayList<>();
     private Mechanic mechanic;
     private Client client;
     private StatusOrder status = StatusOrder.CREATED;
+
+    public Order(Car car, Client client) {
+        if (car == null || !car.isRegistered()) {
+            throw new IllegalArgumentException("An order must be assigned to a registered car");
+        }
+        if (client == null) {
+            throw new IllegalArgumentException("An order must have a client");
+        }
+        this.car = car;
+        this.client = client;
+    }
+
+    public void addTask(Task newTask) {
+        if (newTask == null) {
+            throw new IllegalArgumentException("Cannot add a null task");
+        }
+        if (status == StatusOrder.COMPLETED || status == StatusOrder.CANCELLED) {
+            throw new IllegalStateException("Cannot add tasks to a finished order.");
+        }
+        this.tasks.add(newTask);
+    }
 
     public Car getCar() {
         return car;
@@ -21,8 +42,8 @@ public class Order {
         return client;
     }
 
-    public List<Task> getTask() {
-        return new ArrayList<>(task);
+    public List<Task> getTasks() {
+        return new ArrayList<>(tasks);
     }
 
     public Mechanic getMechanic() {
@@ -31,10 +52,10 @@ public class Order {
 
     public BigDecimal calculateTotalCost() {
         BigDecimal total = BigDecimal.ZERO;
-        if (task == null) {
+        if (tasks == null) {
             return total;
         }
-        for (Task orderTask : task) {
+        for (Task orderTask : tasks) {
             total = total.add(orderTask.getDetail_price()).add(orderTask.getWork_price());
         }
         return total;
@@ -52,7 +73,7 @@ public class Order {
             throw new IllegalStateException(
                     "Invalid order status transition from " + this.status + " to " + status);
         }
-        if (status == StatusOrder.APPROVED && (task == null || task.isEmpty())) {
+        if (status == StatusOrder.APPROVED && (tasks == null || task.isEmpty())) {
             throw new IllegalStateException("An order must have at least one task before it can be approved");
         }
         if (status == StatusOrder.IN_PROGRESS) {
@@ -64,10 +85,10 @@ public class Order {
             }
         }
         if (status == StatusOrder.COMPLETED) {
-            if (task == null || task.isEmpty()) {
+            if (tasks == null || tasks.isEmpty()) {
                 throw new IllegalStateException("An order must have at least one task before it can be completed");
             }
-            for (Task orderTask : task) {
+            for (Task orderTask : tasks) {
                 if (orderTask.getStatus() != StatusOrder.COMPLETED) {
                     throw new IllegalStateException("All tasks must be completed before the order can be completed");
                 }
@@ -116,7 +137,4 @@ public class Order {
         this.mechanic = mechanic;
     }
 
-    public void setTask(List<Task> task) {
-        this.task = task;
-    }
 }

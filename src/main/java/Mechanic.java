@@ -1,23 +1,19 @@
 public class Mechanic {
     private String name;
-    private Specialization specialization;
     private Order activeOrder;
 
-    public String getName() {
-        return name;
+    public Mechanic(String name) {
+        setName(name);
     }
 
-    public Specialization getSpecialization() {
-        return specialization;
-    }
+    public String getName() { return name; }
 
     public void setName(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Mechanic name cannot be blank.");
+        }
         this.name = name;
     }
-
-public void setSpecialization(Specialization specialization) {
-    this.specialization = specialization;
-}
 
     public void startOrder(Order order) {
         if (activeOrder != null && activeOrder != order) {
