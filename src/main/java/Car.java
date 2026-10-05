@@ -30,6 +30,10 @@ public class Car {
         return vin_code;
     }
 
+    public boolean isRegistered() {
+        return vin_code != null && USED_VIN_CODES.contains(vin_code);
+    }
+
     public void setBrand(String brand) {
         this.brand = brand;
     }
