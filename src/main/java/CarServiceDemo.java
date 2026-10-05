@@ -4,9 +4,13 @@ import java.util.List;
 public class CarServiceDemo {
     public static void main(String[] args) {
         System.out.println("POSITIVE SCENARIO: ");
+
+        CarService carService = new CarService();
+
         Client client = new Client();
         client.setName("Alex Morgan");
         client.setPhone("555-0100");
+        carService.registerClient(client);
 
         Car car = new Car();
         car.setBrand("Toyota");
@@ -14,10 +18,11 @@ public class CarServiceDemo {
         car.setYear(2022);
         car.setVin_code("DEMO-CAR-001");
         car.setOwner(client);
-
+        carService.registerCar(car);
         Mechanic mechanic = new Mechanic();
         mechanic.setName("Jordan Lee");
         mechanic.setSpecialization(Specialization.ENGINE);
+        carService.registerMechanic(mechanic);
 
         Task oilChange = createTask("Oil change", "35.50", "10.00");
         Task brakeService = createTask("Brake service", "120.00", "45.75");
@@ -82,11 +87,11 @@ public class CarServiceDemo {
         }
     }
 
-    private static Task createTask(String description, String detailPrice, String wholePrice) {
+    private static Task createTask(String description, String detailPrice, String workPrice) {
         Task task = new Task();
         task.setDescription(description);
         task.setDetail_price(new BigDecimal(detailPrice));
-        task.setWork_price(new BigDecimal(wholePrice));
+        task.setWork_price(new BigDecimal(workPrice));
         return task;
 
     }

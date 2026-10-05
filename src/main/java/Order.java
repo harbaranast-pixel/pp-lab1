@@ -1,4 +1,5 @@
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Order {
@@ -21,7 +22,7 @@ public class Order {
     }
 
     public List<Task> getTask() {
-        return task;
+        return new ArrayList<>(task);
     }
 
     public Mechanic getMechanic() {
