@@ -1,5 +1,4 @@
 import java.math.BigDecimal;
-import java.util.List;
 
 public class CarServiceDemo {
     public static void main(String[] args) {
@@ -13,7 +12,7 @@ public class CarServiceDemo {
         Car car = new Car("DEMO-CAR-001", "Toyota", "Corolla", 2022, client);
         carService.registerCar(car);
 
-        Mechanic mechanic = new Mechanic("Jordan Lee");
+        Mechanic mechanic = new Mechanic("Jordan Lee", "Motor");
         carService.registerMechanic(mechanic);
 
         Order completedOrder = carService.createOrder(car, client);
@@ -24,14 +23,15 @@ public class CarServiceDemo {
         completedOrder.addTask(oilChange);
         completedOrder.addTask(brakeService);
 
-        completedOrder.setStatus(StatusOrder.DIAGNOSED);
-        completedOrder.setStatus(StatusOrder.APPROVED);
+        completedOrder.diagnose();
+        completedOrder.approve();
         completedOrder.setMechanic(mechanic);
-        completedOrder.setStatus(StatusOrder.IN_PROGRESS);
+        completedOrder.startWork();
 
-        oilChange.setStatus(StatusOrder.COMPLETED);
-        brakeService.setStatus(StatusOrder.COMPLETED);
-        completedOrder.setStatus(StatusOrder.COMPLETED);
+        oilChange.completeTask();
+        brakeService.completeTask();
+
+        completedOrder.complete();
 
         System.out.println("Total cost: " + completedOrder.calculateTotalCost());
 
@@ -40,7 +40,6 @@ public class CarServiceDemo {
         try {
             Client unregisteredClient = new Client("Ghost", "000");
             Car unregisteredCar = new Car("GHOST-VIN", "BMW", "X5", 2020, unregisteredClient);
-            // Спроба створити замовлення без попередньої реєстрації в CarService
             carService.createOrder(unregisteredCar, unregisteredClient);
         } catch (IllegalArgumentException exception) {
             System.out.println(exception.getMessage());
@@ -49,8 +48,8 @@ public class CarServiceDemo {
         System.out.println("\nNEGATIVE 2: APPROVE EMPTY ORDER ");
         try {
             Order emptyOrder = carService.createOrder(car, client);
-            emptyOrder.setStatus(StatusOrder.DIAGNOSED);
-            emptyOrder.setStatus(StatusOrder.APPROVED);
+            emptyOrder.diagnose();
+            emptyOrder.approve();
         } catch (IllegalStateException exception) {
             System.out.println(exception.getMessage());
         }
@@ -59,9 +58,9 @@ public class CarServiceDemo {
         try {
             Order orderWithoutMechanic = carService.createOrder(car, client);
             orderWithoutMechanic.addTask(new Task("Inspection", new BigDecimal("20.00"), new BigDecimal("0.00")));
-            orderWithoutMechanic.setStatus(StatusOrder.DIAGNOSED);
-            orderWithoutMechanic.setStatus(StatusOrder.APPROVED);
-            orderWithoutMechanic.setStatus(StatusOrder.IN_PROGRESS);
+            orderWithoutMechanic.diagnose();
+            orderWithoutMechanic.approve();
+            orderWithoutMechanic.startWork();
         } catch (IllegalStateException exception) {
             System.out.println(exception.getMessage());
         }
@@ -70,24 +69,33 @@ public class CarServiceDemo {
         try {
             Order firstActiveOrder = carService.createOrder(car, client);
             firstActiveOrder.addTask(new Task("Engine repair", new BigDecimal("200.00"), new BigDecimal("80.00")));
-            firstActiveOrder.setStatus(StatusOrder.DIAGNOSED);
-            firstActiveOrder.setStatus(StatusOrder.APPROVED);
+            firstActiveOrder.diagnose();
+            firstActiveOrder.approve();
             firstActiveOrder.setMechanic(mechanic);
-            firstActiveOrder.setStatus(StatusOrder.IN_PROGRESS);
+            firstActiveOrder.startWork();
 
             Order secondOrder = carService.createOrder(car, client);
             secondOrder.addTask(new Task("Tire change", new BigDecimal("40.00"), new BigDecimal("0.00")));
-            secondOrder.setStatus(StatusOrder.DIAGNOSED);
-            secondOrder.setStatus(StatusOrder.APPROVED);
+            secondOrder.diagnose();
+            secondOrder.approve();
             secondOrder.setMechanic(mechanic);
-            secondOrder.setStatus(StatusOrder.IN_PROGRESS);
+            secondOrder.startWork();
         } catch (IllegalStateException exception) {
             System.out.println(exception.getMessage());
         }
 
         System.out.println("\nNEGATIVE 5: INVALID STATUS TRANSITION ");
         try {
-            carService.createOrder(car, client).setStatus(StatusOrder.COMPLETED);
+            Order freshOrder = carService.createOrder(car, client);
+            freshOrder.complete();
+        } catch (IllegalStateException exception) {
+            System.out.println(exception.getMessage());
+        }
+
+        System.out.println("\nNEGATIVE 6: MODIFY COMPLETED ORDER ");
+        try {
+            Task extraTask = new Task("Extra polishing", new BigDecimal("0.00"), new BigDecimal("50.00"));
+            completedOrder.addTask(extraTask);
         } catch (IllegalStateException exception) {
             System.out.println(exception.getMessage());
         }

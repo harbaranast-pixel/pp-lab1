@@ -8,7 +8,12 @@ public class CarService {
     private List<Order> orders = new ArrayList<>();
 
     public void registerCar(Car car) {
-        if (car != null && !cars.contains(car)) {
+        if (car == null) return;
+        boolean vinExists = cars.stream().anyMatch(c -> c.getVin_code().equals(car.getVin_code()));
+        if (vinExists) {
+            throw new IllegalArgumentException("Car with this VIN is already registered in the service.");
+        }
+        if (!cars.contains(car)) {
             cars.add(car);
         }
     }
@@ -34,7 +39,7 @@ public class CarService {
         }
 
         Order newOrder = new Order(car, client);
-        orders.add(newOrder); // Одразу зберігаємо створене замовлення
+        orders.add(newOrder);
         return newOrder;
     }
 
