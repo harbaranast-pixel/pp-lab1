@@ -41,22 +41,30 @@ public class Car {
     }
 
     public void setBrand(String brand) {
-        if (brand == null || brand.isBlank()) throw new IllegalArgumentException("Brand cannot be blank.");
+        if (brand == null || brand.isBlank()) {
+            throw new IllegalArgumentException("Brand cannot be blank.");
+        }
         this.brand = brand;
     }
 
     public void setModel(String model) {
-        if (model == null || model.isBlank()) throw new IllegalArgumentException("Model cannot be blank.");
+        if (model == null || model.isBlank()) {
+            throw new IllegalArgumentException("Model cannot be blank.");
+        }
         this.model = model;
     }
 
     public void setYear(int year) {
-        if (year < 1886) throw new IllegalArgumentException("Year is invalid.");
+        if (year < 1886) {
+            throw new IllegalArgumentException("Year is invalid.");
+        }
         this.year = year;
     }
 
     public void setOwner(Client owner) {
-        if (owner == null) throw new IllegalArgumentException("Car must have an owner.");
+        if (owner == null) {
+            throw new IllegalArgumentException("Car must have an owner.");
+        }
         this.owner = owner;
     }
 

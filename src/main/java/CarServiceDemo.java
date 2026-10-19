@@ -13,6 +13,7 @@ public class CarServiceDemo {
         carService.registerCar(car);
 
         Mechanic mechanic = new Mechanic("Jordan Lee", "Motor");
+        mechanic.grantCertificate(new Certificate("Advanced Mechanic", new BigDecimal("10")));
         carService.registerMechanic(mechanic);
 
         Order completedOrder = carService.createOrder(car, client);

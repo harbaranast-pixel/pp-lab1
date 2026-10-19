@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Order {
-    private Car car;
+    private final Car car;
     private List<Task> tasks = new ArrayList<>();
     private Mechanic mechanic;
     private Client client;
@@ -51,7 +51,10 @@ public class Order {
     public BigDecimal calculateTotalCost() {
         BigDecimal total = BigDecimal.ZERO;
         for (Task orderTask : tasks) {
-            total = total.add(orderTask.getDetail_price()).add(orderTask.getWork_price());
+            BigDecimal workValue = mechanic == null
+                    ? orderTask.getWork_price()
+                    : mechanic.calculateWorkValue(orderTask.getWork_price());
+            total = total.add(orderTask.getDetail_price()).add(workValue);
         }
         return total;
     }
@@ -113,17 +116,6 @@ public class Order {
         if (status == StatusOrder.COMPLETED || status == StatusOrder.CANCELLED) {
             throw new IllegalStateException("Cannot modify a completed or cancelled order.");
         }
-    }
-
-    public void setCar(Car car) {
-        checkIsModifiable();
-        if (car == null) {
-            throw new IllegalArgumentException("An order must be assigned to a car");
-        }
-        if (this.car != null && this.car != car) {
-            throw new IllegalStateException("An order cannot be reassigned to another car");
-        }
-        this.car = car;
     }
 
     public void setClient(Client client) {
