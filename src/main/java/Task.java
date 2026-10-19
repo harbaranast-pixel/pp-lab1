@@ -2,38 +2,38 @@ import java.math.BigDecimal;
 
 public class Task {
     private String description;
-    private BigDecimal detail_price;
-    private BigDecimal work_price;
+    private BigDecimal detailPrice;
+    private BigDecimal workPrice;
     private int time;
     private boolean isCompleted;
 
-    public Task(String description, BigDecimal detail_price, BigDecimal work_price) {
+    public Task(String description, BigDecimal detailPrice, BigDecimal workPrice) {
         setDescription(description);
 
-        if (detail_price == null || detail_price.compareTo(BigDecimal.ZERO) < 0) {
+        if (detailPrice == null || detailPrice.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("Detail price cannot be null or negative.");
         }
-        this.detail_price = detail_price;
+        this.detailPrice = detailPrice;
 
-        if (work_price == null || work_price.compareTo(BigDecimal.ZERO) < 0) {
+        if (workPrice == null || workPrice.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("Work price cannot be null or negative.");
         }
-        this.work_price = work_price;
+        this.workPrice = workPrice;
     }
 
     public int getTime() {
         return time;
     }
 
-    public BigDecimal getDetail_price() {
-        return detail_price;
+    public BigDecimal getDetailPrice() {
+        return detailPrice;
     }
 
-    public BigDecimal getWork_price() {
-        return work_price;
+    public BigDecimal getWorkPrice() {
+        return workPrice;
     }
 
-    public boolean getIsCompleted() {
+    public boolean isCompleted() {
         return isCompleted;
     }
 
@@ -54,6 +54,4 @@ public class Task {
     public void completeTask() {
         this.isCompleted = true;
     }
-
-
 }

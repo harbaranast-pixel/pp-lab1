@@ -3,19 +3,17 @@ import java.util.Set;
 
 public class Car {
 
-    public static final int MIN_MANUFACTURING_YEAR = 1886;
-
-    private String  brand;
+    private String brand;
     private String model;
     private int year;
-    private String vin_code;
-    private Client  owner;
+    private String vinCode;
+    private Client owner;
 
-    public Car(String vin_code, String brand, String model, int year, Client owner) {
-        if (vin_code == null || vin_code.isBlank()) {
+    public Car(String vinCode, String brand, String model, int year, Client owner) {
+        if (vinCode == null || vinCode.isBlank()) {
             throw new IllegalArgumentException("VIN code cannot be empty.");
         }
-        this.vin_code = vin_code;
+        this.vinCode = vinCode;
         setBrand(brand);
         setModel(model);
         setYear(year);
@@ -38,8 +36,9 @@ public class Car {
         return model;
     }
 
-    public String getVin_code() {
-        return vin_code;
+    // Виправлено: getVin_code -> getVinCode
+    public String getVinCode() {
+        return vinCode;
     }
 
     public void setBrand(String brand) {
@@ -55,7 +54,7 @@ public class Car {
     }
 
     public void setYear(int year) {
-        if (year < MIN_MANUFACTURING_YEAR)
+        if (year < Constants.MIN_MANUFACTURING_YEAR)
             throw new IllegalArgumentException("Year is invalid.");
         this.year = year;
     }
@@ -65,6 +64,4 @@ public class Car {
             throw new IllegalArgumentException("Car must have an owner.");
         this.owner = owner;
     }
-
-
 }

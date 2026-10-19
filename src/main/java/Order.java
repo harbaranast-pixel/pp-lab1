@@ -51,7 +51,7 @@ public class Order {
     public BigDecimal calculateTotalCost() {
         BigDecimal total = BigDecimal.ZERO;
         for (Task orderTask : tasks) {
-            total = total.add(orderTask.getDetail_price()).add(orderTask.getWork_price());
+            total = total.add(orderTask.getDetailPrice()).add(orderTask.getWorkPrice());
         }
         return total;
     }
@@ -89,7 +89,7 @@ public class Order {
             throw new IllegalStateException("Only in-progress orders can be completed.");
         }
         for (Task orderTask : tasks) {
-            if (!orderTask.getIsCompleted()) {
+            if (!orderTask.isCompleted()) {
                 throw new IllegalStateException("All tasks must be completed before the order can be completed");
             }
         }
@@ -139,5 +139,4 @@ public class Order {
         }
         this.mechanic = mechanic;
     }
-
 }

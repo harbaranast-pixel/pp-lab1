@@ -9,7 +9,7 @@ public class CarService {
 
     public void registerCar(Car car) {
         if (car == null) return;
-        boolean vinExists = cars.stream().anyMatch(c -> c.getVin_code().equals(car.getVin_code()));
+        boolean vinExists = cars.stream().anyMatch(c -> c.getVinCode().equals(car.getVinCode()));
         if (vinExists) {
             throw new IllegalArgumentException("Car with this VIN is already registered in the service.");
         }
@@ -46,12 +46,15 @@ public class CarService {
     public List<Car> getCars() {
         return new ArrayList<>(cars);
     }
+
     public List<Client> getClients() {
         return new ArrayList<>(clients);
     }
+
     public List<Mechanic> getMechanics() {
         return new ArrayList<>(mechanics);
     }
+
     public List<Order> getOrders() {
         return new ArrayList<>(orders);
     }
