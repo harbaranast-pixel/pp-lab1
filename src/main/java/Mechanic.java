@@ -35,9 +35,7 @@ public class Mechanic {
         activeOrder = order;
     }
 
-    public void finishOrder(Order order) {
-        if (activeOrder == order) {
+    public void finishOrder() {
             activeOrder = null;
-        }
     }
 }

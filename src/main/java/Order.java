@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Order {
-    private Car car;
+    private final Car car;
     private List<Task> tasks = new ArrayList<>();
     private Mechanic mechanic;
     private Client client;
@@ -94,7 +94,7 @@ public class Order {
             }
         }
         if (mechanic != null) {
-            mechanic.finishOrder(this);
+            mechanic.finishOrder();
         }
         this.status = StatusOrder.COMPLETED;
     }
@@ -115,17 +115,6 @@ public class Order {
         }
     }
 
-    public void setCar(Car car) {
-        checkIsModifiable();
-        if (car == null) {
-            throw new IllegalArgumentException("An order must be assigned to a car");
-        }
-        if (this.car != null && this.car != car) {
-            throw new IllegalStateException("An order cannot be reassigned to another car");
-        }
-        this.car = car;
-    }
-
     public void setClient(Client client) {
         checkIsModifiable();
         this.client = client;
@@ -144,7 +133,7 @@ public class Order {
             Mechanic previousMechanic = this.mechanic;
             this.mechanic = mechanic;
             if (previousMechanic != null) {
-                previousMechanic.finishOrder(this);
+                previousMechanic.finishOrder();
             }
             return;
         }

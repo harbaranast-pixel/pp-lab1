@@ -5,7 +5,7 @@ public class Task {
     private BigDecimal detail_price;
     private BigDecimal work_price;
     private int time;
-    private boolean isCompleted = false;
+    private boolean isCompleted;
 
     public Task(String description, BigDecimal detail_price, BigDecimal work_price) {
         setDescription(description);
