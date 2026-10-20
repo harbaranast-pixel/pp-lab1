@@ -1,10 +1,22 @@
+package org.example;
+
+import org.example.domain.*;
+import pricing.PriceCalculator;
+import pricing.StandardPricingCalculator;
+import repository.InMemoryRepairOrderRepository;
+import repository.RepairOrderRepository;
+import service.CarService;
+
 import java.math.BigDecimal;
 
 public class CarServiceDemo {
     public static void main(String[] args) {
-        System.out.println("POSITIVE SCENARIO: ");
 
-        CarService carService = new CarService();
+        RepairOrderRepository repo = new InMemoryRepairOrderRepository();
+        PriceCalculator policy = new StandardPricingCalculator();
+        CarService carService = new CarService(repo, policy);
+
+        System.out.println("POSITIVE SCENARIO: ");
 
         Client client = new Client("Alex Morgan", "555-0100");
         carService.registerClient(client);
@@ -15,7 +27,7 @@ public class CarServiceDemo {
         Mechanic mechanic = new Mechanic("Jordan Lee", "Motor");
         carService.registerMechanic(mechanic);
 
-        Order completedOrder = carService.createOrder(car, client);
+        RepairOrder completedOrder = carService.createOrder(car, client);
 
         Task oilChange = new Task("Oil change", new BigDecimal("35.50"), new BigDecimal("10.00"));
         Task brakeService = new Task("Brake service", new BigDecimal("120.00"), new BigDecimal("45.75"));
@@ -35,6 +47,8 @@ public class CarServiceDemo {
 
         System.out.println("Total cost: " + completedOrder.calculateTotalCost());
 
+        carService.updateOrder(completedOrder);
+        carService.processCommercialCalculator(completedOrder.getId());
 
         System.out.println("\nNEGATIVE 1: COORDINATOR BLOCKS UNREGISTERED CAR ");
         try {
@@ -47,7 +61,7 @@ public class CarServiceDemo {
 
         System.out.println("\nNEGATIVE 2: APPROVE EMPTY ORDER ");
         try {
-            Order emptyOrder = carService.createOrder(car, client);
+            RepairOrder emptyOrder = carService.createOrder(car, client);
             emptyOrder.diagnose();
             emptyOrder.approve();
         } catch (IllegalStateException exception) {
@@ -56,7 +70,7 @@ public class CarServiceDemo {
 
         System.out.println("\nNEGATIVE 3: START WITHOUT A MECHANIC ");
         try {
-            Order orderWithoutMechanic = carService.createOrder(car, client);
+            RepairOrder orderWithoutMechanic = carService.createOrder(car, client);
             orderWithoutMechanic.addTask(new Task("Inspection", new BigDecimal("20.00"), new BigDecimal("0.00")));
             orderWithoutMechanic.diagnose();
             orderWithoutMechanic.approve();
@@ -67,14 +81,14 @@ public class CarServiceDemo {
 
         System.out.println("\nNEGATIVE 4: ASSIGN MECHANIC TO TWO ACTIVE ORDERS ");
         try {
-            Order firstActiveOrder = carService.createOrder(car, client);
+            RepairOrder firstActiveOrder = carService.createOrder(car, client);
             firstActiveOrder.addTask(new Task("Engine repair", new BigDecimal("200.00"), new BigDecimal("80.00")));
             firstActiveOrder.diagnose();
             firstActiveOrder.approve();
             firstActiveOrder.setMechanic(mechanic);
             firstActiveOrder.startWork();
 
-            Order secondOrder = carService.createOrder(car, client);
+            RepairOrder secondOrder = carService.createOrder(car, client);
             secondOrder.addTask(new Task("Tire change", new BigDecimal("40.00"), new BigDecimal("0.00")));
             secondOrder.diagnose();
             secondOrder.approve();
@@ -86,7 +100,7 @@ public class CarServiceDemo {
 
         System.out.println("\nNEGATIVE 5: INVALID STATUS TRANSITION ");
         try {
-            Order freshOrder = carService.createOrder(car, client);
+            RepairOrder freshOrder = carService.createOrder(car, client);
             freshOrder.complete();
         } catch (IllegalStateException exception) {
             System.out.println(exception.getMessage());

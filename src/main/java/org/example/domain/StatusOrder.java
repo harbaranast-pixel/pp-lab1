@@ -1,3 +1,5 @@
+package org.example.domain;
+
 public enum StatusOrder {
     CREATED,
     DIAGNOSED,

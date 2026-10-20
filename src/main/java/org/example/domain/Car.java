@@ -1,5 +1,6 @@
-import java.util.HashSet;
-import java.util.Set;
+package org.example.domain;
+
+import org.example.Constants;
 
 public class Car {
 
@@ -61,7 +62,7 @@ public class Car {
 
     public void setOwner(Client owner) {
         if (owner == null)
-            throw new IllegalArgumentException("Car must have an owner.");
+            throw new IllegalArgumentException("org.example.domain.Car must have an owner.");
         this.owner = owner;
     }
 }

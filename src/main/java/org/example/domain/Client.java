@@ -1,3 +1,5 @@
+package org.example.domain;
+
 public class Client {
     private String name;
     private String phone;
@@ -12,14 +14,14 @@ public class Client {
 
     public void setPhone(String phone) {
         if (phone == null || phone.isBlank()) {
-            throw new IllegalArgumentException("Client phone cannot be blank.");
+            throw new IllegalArgumentException("org.example.domain.Client phone cannot be blank.");
         }
         this.phone = phone;
     }
 
     public void setName(String name) {
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("Client name cannot be blank.");
+            throw new IllegalArgumentException("org.example.domain.Client name cannot be blank.");
         }
         this.name = name;
     }
