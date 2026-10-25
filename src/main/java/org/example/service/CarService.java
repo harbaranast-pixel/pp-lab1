@@ -1,12 +1,12 @@
-package service;
+package org.example.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.domain.Car;
 import org.example.domain.Client;
 import org.example.domain.Mechanic;
 import org.example.domain.RepairOrder;
-import pricing.PriceCalculator;
-import repository.RepairOrderRepository;
+import org.example.pricing.PriceCalculator;
+import org.example.repository.RepairOrderRepository;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -70,7 +70,7 @@ public class CarService {
    public void processCommercialCalculator(String orderId){
         RepairOrder order = getOrder(orderId);
         BigDecimal baseTotal = order.calculateTotalCost();
-        BigDecimal finalPrice = priceCalculator.calculatecommercialPrice(baseTotal);
+        BigDecimal finalPrice = priceCalculator.calculateCommercialPrice(baseTotal);
 
         System.out.println("Base cost: " + baseTotal);
         System.out.println("Commercial cost for payment: " + finalPrice);

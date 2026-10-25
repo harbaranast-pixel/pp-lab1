@@ -1,11 +1,11 @@
 package org.example;
 
 import org.example.domain.*;
-import pricing.PriceCalculator;
-import pricing.StandardPricingCalculator;
-import repository.InMemoryRepairOrderRepository;
-import repository.RepairOrderRepository;
-import service.CarService;
+import org.example.pricing.PriceCalculator;
+import org.example.pricing.StandardPricingCalculator;
+import org.example.repository.InMemoryRepairOrderRepository;
+import org.example.repository.RepairOrderRepository;
+import org.example.service.CarService;
 
 import java.math.BigDecimal;
 

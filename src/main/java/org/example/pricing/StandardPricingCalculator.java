@@ -1,4 +1,4 @@
-package pricing;
+package org.example.pricing;
 
 import org.example.Constants;
 
@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 public class StandardPricingCalculator implements PriceCalculator {
 
     @Override
-    public BigDecimal calculatecommercialPrice(BigDecimal basePrice) {
+    public BigDecimal calculateCommercialPrice(BigDecimal basePrice) {
         if(basePrice.compareTo(Constants.MIN_COST)<0){
             return Constants.MIN_COST;
         }

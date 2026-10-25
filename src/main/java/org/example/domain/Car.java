@@ -62,7 +62,7 @@ public class Car {
 
     public void setOwner(Client owner) {
         if (owner == null)
-            throw new IllegalArgumentException("org.example.domain.Car must have an owner.");
+            throw new IllegalArgumentException("Car must have an owner.");
         this.owner = owner;
     }
 }

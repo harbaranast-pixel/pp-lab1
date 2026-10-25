@@ -14,14 +14,14 @@ public class Client {
 
     public void setPhone(String phone) {
         if (phone == null || phone.isBlank()) {
-            throw new IllegalArgumentException("org.example.domain.Client phone cannot be blank.");
+            throw new IllegalArgumentException("Client's phone cannot be blank.");
         }
         this.phone = phone;
     }
 
     public void setName(String name) {
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("org.example.domain.Client name cannot be blank.");
+            throw new IllegalArgumentException("Client's name cannot be blank.");
         }
         this.name = name;
     }

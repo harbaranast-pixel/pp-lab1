@@ -1,4 +1,4 @@
-package repository;
+package org.example.repository;
 import org.example.domain.RepairOrder;
 
 import java.util.Optional;
