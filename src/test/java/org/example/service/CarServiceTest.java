@@ -62,4 +62,51 @@ public class CarServiceTest {
 
         verify(priceCalculatorMock).calculateCommercialPrice(new BigDecimal("150.00"));
     }
+
+    @Test
+    void updateOrder_ShouldCallRepositorySave(){
+
+        RepairOrder order = new RepairOrder(car, client);
+
+        carService.updateOrder(order);
+
+
+        verify(orderRepositoryMock).save(order);
+    }
+
+    @Test
+    void createOrder_WithUnregisteredCar_ShouldThrowException(){
+        Car unregisteredCar = new Car("VIN123", "Toyota", "Camry", 2020, client);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> carService.createOrder(unregisteredCar, client));
+
+        assertEquals("Cannot create order: Car is not registered in this service.", exception.getMessage());
+
+    }
+
+    @Test
+    void createOrder_WithUnregisteredClient_ShouldThrowException(){
+        Client unregisteredClient = new Client("Max", "713632");
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> carService.createOrder(car, unregisteredClient));
+
+        assertEquals("Cannot create order: Client is not registered in this service.", exception.getMessage());
+
+    }
+
+    @Test
+    void registerCar_WithAlreadyRegisteredVIN_ShouldThrowException(){
+        Car car1 = new Car("VIN2436", "Toyota", "Camry", 2020, client);
+        Car car2 = new Car("VIN2436", "BMW", "X5", 2020, client);
+
+        carService.registerCar(car1);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> carService.registerCar(car2));
+
+        assertEquals("Car with this VIN is already registered in the service.", exception.getMessage());
+
+    }
 }

@@ -34,7 +34,7 @@ public class RepairOrder {
     public void addTask(Task newTask) {
         checkIsModifiable();
         if (newTask == null) {
-            throw new IllegalArgumentException("Cannot add a null task");
+            throw new IllegalArgumentException("Cannot add a null task.");
         }
         tasks.add(newTask);
     }

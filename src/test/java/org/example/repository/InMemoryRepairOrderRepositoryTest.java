@@ -3,6 +3,7 @@ package org.example.repository;
 import org.example.domain.Car;
 import org.example.domain.Client;
 import org.example.domain.RepairOrder;
+import org.example.domain.StatusOrder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -36,5 +37,17 @@ public class InMemoryRepairOrderRepositoryTest {
         Optional<RepairOrder> retrievedOrder = repository.findById("invalid-id");
 
         assertTrue(retrievedOrder.isEmpty());
+    }
+
+    @Test
+    void save_ShouldUpdateExistingOrder_WhenOrderIsModified(){
+        repository.save(order);
+        order.diagnose();
+
+        repository.save(order);
+
+        Optional<RepairOrder>  retrieveOrder = repository.findById(order.getId());
+        assertTrue(retrieveOrder.isPresent());
+        assertEquals(StatusOrder.DIAGNOSED, retrieveOrder.get().getStatus());
     }
 }

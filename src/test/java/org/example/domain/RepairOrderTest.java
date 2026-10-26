@@ -91,7 +91,7 @@ public class RepairOrderTest {
     }
 
     @Test
-    void calcelOrder_ShouldChangeStatusToCancelled(){
+    void cancelOrder_ShouldChangeStatusToCancelled(){
 
         assertDoesNotThrow(() -> order.cancel());
 
@@ -99,7 +99,7 @@ public class RepairOrderTest {
     }
 
     @Test
-    void cancelOrder_ShouldThrowExceprion_WhenAlreadyCompleted(){
+    void cancelOrder_ShouldThrowException_WhenAlreadyCompleted(){
 
         Task task = new Task("Test", BigDecimal.ZERO, BigDecimal.TEN);
         order.addTask(task);
@@ -114,5 +114,23 @@ public class RepairOrderTest {
 
         IllegalStateException exception = assertThrows(IllegalStateException.class, order::cancel);
         assertEquals("Cannot cancel an already completed or cancelled order.", exception.getMessage());
+    }
+
+    @Test
+    void addTask_WithNullTask_ShouldThrowException(){
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> order.addTask(null));
+
+        assertEquals("Cannot add a null task.", exception.getMessage());
+    }
+
+    @Test
+    void completeOrder_WhenNotInProgress_ShouldThrowException(){
+
+        IllegalStateException exception = assertThrows(IllegalStateException.class,
+                () -> order.complete());
+
+        assertEquals("Only in-progress orders can be completed.", exception.getMessage());
     }
 }

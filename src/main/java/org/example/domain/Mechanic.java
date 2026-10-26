@@ -18,21 +18,21 @@ public class Mechanic {
 
     public void setSpecialization(String specialization) {
         if (specialization == null || specialization.isBlank()) {
-            throw new IllegalArgumentException("org.example.domain.Mechanic specialization cannot be blank.");
+            throw new IllegalArgumentException("Mechanic's specialization cannot be blank.");
         }
         this.specialization = specialization;
     }
 
     public void setName(String name) {
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("org.example.domain.Mechanic name cannot be blank.");
+            throw new IllegalArgumentException("Mechanic's name cannot be blank.");
         }
         this.name = name;
     }
 
     public void startOrder(RepairOrder order) {
         if (activeOrder != null && activeOrder != order) {
-            throw new IllegalStateException("A mechanic cannot work on two active orders at the same time");
+            throw new IllegalStateException("A mechanic cannot work on two active orders at the same time.");
         }
         activeOrder = order;
     }

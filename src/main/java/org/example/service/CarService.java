@@ -26,7 +26,7 @@ public class CarService {
         if (car == null) return;
         boolean vinExists = cars.stream().anyMatch(c -> c.getVinCode().equals(car.getVinCode()));
         if (vinExists) {
-            throw new IllegalArgumentException("org.example.domain.Car with this VIN is already registered in the service.");
+            throw new IllegalArgumentException("Car with this VIN is already registered in the service.");
         }
         if (!cars.contains(car)) {
             cars.add(car);
@@ -47,10 +47,10 @@ public class CarService {
 
     public RepairOrder createOrder(Car car, Client client) {
         if (!cars.contains(car)) {
-            throw new IllegalArgumentException("Cannot create order: org.example.domain.Car is not registered in this service.");
+            throw new IllegalArgumentException("Cannot create order: Car is not registered in this service.");
         }
         if (!clients.contains(client)) {
-            throw new IllegalArgumentException("Cannot create order: org.example.domain.Client is not registered in this service.");
+            throw new IllegalArgumentException("Cannot create order: Client is not registered in this service.");
         }
 
         RepairOrder newOrder = new RepairOrder(car, client);

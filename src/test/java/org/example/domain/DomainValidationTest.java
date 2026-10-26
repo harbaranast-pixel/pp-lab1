@@ -4,8 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.internal.matchers.Null;
 
 import java.math.BigDecimal;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DomainValidationTest {
 
@@ -68,6 +68,36 @@ public class DomainValidationTest {
     }
 
     @Test
+    void task_WithNegativeDetailPrice_ShouldThrowException(){
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> new Task("Inspection",new BigDecimal("-50.00"), new BigDecimal("10.00")));
+
+
+        assertEquals("Detail price cannot be null or negative.", exception.getMessage());
+    }
+
+    @Test
+    void task_WithNegativeDWorkPrice_ShouldThrowException(){
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> new Task("Inspection",new BigDecimal("50.00"), new BigDecimal("-10.00")));
+
+
+        assertEquals("Work price cannot be null or negative.", exception.getMessage());
+    }
+
+    @Test
+    void task_WithBlankDescription_ShouldThrowException(){
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> new Task("",new BigDecimal("50.00"), new BigDecimal("10.00")));
+
+
+        assertEquals("Description cannot be blank.", exception.getMessage());
+    }
+
+    @Test
     void client_WithBlankName_ShouldThrowException(){
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> new Client("", "12374"));
@@ -80,4 +110,49 @@ public class DomainValidationTest {
                 () -> new Client("Alex", ""));
         assertEquals("Client's phone cannot be blank.", exception.getMessage());
     }
+
+    @Test
+    void mechanic_WithBlankName_ShouldThrowException(){
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> new Mechanic("", "Oil change"));
+        assertEquals("Mechanic's name cannot be blank.", exception.getMessage());
+    }
+
+    @Test
+    void mechanic_WithBlankSpecialization_ShouldThrowException(){
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> new Mechanic("Max", ""));
+        assertEquals("Mechanic's specialization cannot be blank.", exception.getMessage());
+    }
+
+    @Test
+    void mechanic_StartOrder_WithAlreadyActiveOrder_ShouldThrowException(){
+        Mechanic mechanic = new Mechanic("Max", "Engine");
+        Client client = new Client("Alex", "122454");
+        Car car = new Car("VIN1243", "Toyota", "Camry", 2020, client);
+
+
+        RepairOrder order1 = new RepairOrder(car, client);
+        RepairOrder order2 = new RepairOrder(car, client);
+
+        mechanic.startOrder(order1);
+
+        IllegalStateException exception = assertThrows(IllegalStateException.class,
+                () -> mechanic.startOrder(order2));
+
+        assertEquals("A mechanic cannot work on two active orders at the same time.", exception.getMessage());
+        }
+
+    @Test
+    void mechanic_StartOrder_ShouldAssignOrder_WhenMechanicIsFree() {
+        Mechanic mechanic = new Mechanic("Mike", "Engine");
+        Client client = new Client("Alex", "12345");
+        Car car = new Car("VIN123", "Toyota", "Camry", 2020, client);
+        RepairOrder order = new RepairOrder(car, client);
+
+        assertDoesNotThrow(() -> mechanic.startOrder(order));
+    }
 }
+
+
+
