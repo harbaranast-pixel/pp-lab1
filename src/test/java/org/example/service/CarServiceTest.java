@@ -75,6 +75,32 @@ public class CarServiceTest {
     }
 
     @Test
+    void getOrder_ShouldReturnOrderFromRepository() {
+        RepairOrder order = new RepairOrder(car, client);
+        when(orderRepositoryMock.findById(order.getId())).thenReturn(Optional.of(order));
+
+        assertSame(order, carService.getOrder(order.getId()));
+    }
+
+    @Test
+    void getOrder_WhenOrderDoesNotExist_ShouldThrowException() {
+        when(orderRepositoryMock.findById("missing-id")).thenReturn(Optional.empty());
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> carService.getOrder("missing-id"));
+
+        assertEquals("Order is not found:missing-id", exception.getMessage());
+    }
+
+    @Test
+    void registerMethods_ShouldIgnoreNullValues() {
+        assertDoesNotThrow(() -> carService.registerCar(null));
+        assertDoesNotThrow(() -> carService.registerClient(null));
+        assertDoesNotThrow(() -> carService.registerMechanic(null));
+        assertDoesNotThrow(() -> carService.registerMechanic(new Mechanic("Jordan", "Engine")));
+    }
+
+    @Test
     void createOrder_WithUnregisteredCar_ShouldThrowException(){
         Car unregisteredCar = new Car("VIN123", "Toyota", "Camry", 2020, client);
 

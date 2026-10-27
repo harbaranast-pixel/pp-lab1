@@ -58,6 +58,7 @@ public class RepairOrderTest {
 
         assertDoesNotThrow(() -> order.complete());
         assertEquals(StatusOrder.COMPLETED, order.getStatus());
+        assertDoesNotThrow(() -> mechanic.startOrder(new RepairOrder(car, client)));
     }
 
     @Test
@@ -132,5 +133,47 @@ public class RepairOrderTest {
                 () -> order.complete());
 
         assertEquals("Only in-progress orders can be completed.", exception.getMessage());
+    }
+
+    @Test
+    void gettersAndSetters_ShouldExposeAndUpdateOrderDetails() {
+        Client newClient = new Client("Taylor", "67890");
+        assertSame(car, order.getCar());
+        assertSame(client, order.getClient());
+        assertNull(order.getMechanic());
+        assertEquals(StatusOrder.CREATED, order.getStatus());
+
+        order.setClient(newClient);
+        order.setMechanic(mechanic);
+
+        assertSame(newClient, order.getClient());
+        assertSame(mechanic, order.getMechanic());
+    }
+
+    @Test
+    void getTasks_ShouldReturnDefensiveCopy() {
+        Task task = new Task("Inspection", BigDecimal.ZERO, BigDecimal.TEN);
+        order.addTask(task);
+
+        order.getTasks().clear();
+
+        assertEquals(1, order.getTasks().size());
+        assertSame(task, order.getTasks().get(0));
+    }
+
+    @Test
+    void setMechanic_WhenOrderIsInProgress_ShouldReleasePreviousMechanic() {
+        Mechanic replacement = new Mechanic("Taylor", "Brakes");
+        order.addTask(new Task("Repair", BigDecimal.ZERO, BigDecimal.TEN));
+        order.diagnose();
+        order.approve();
+        order.setMechanic(mechanic);
+        order.startWork();
+
+        order.setMechanic(replacement);
+
+        assertSame(replacement, order.getMechanic());
+        assertDoesNotThrow(() -> mechanic.startOrder(new RepairOrder(car, client)));
+        assertThrows(IllegalStateException.class, () -> replacement.startOrder(new RepairOrder(car, client)));
     }
 }
