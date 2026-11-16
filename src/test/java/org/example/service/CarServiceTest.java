@@ -23,12 +23,12 @@ public class CarServiceTest {
     private Car car;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
 
         orderRepositoryMock = mock(RepairOrderRepository.class);
         priceCalculatorMock = mock(PriceCalculator.class);
 
-        carService = new CarService(orderRepositoryMock, priceCalculatorMock);
+        carService = new CarService(priceCalculatorMock);
 
         client = new Client("Alex", "1372");
         car = new Car("VIN123", "Toyota", "Camry", 2020, client);
@@ -39,9 +39,9 @@ public class CarServiceTest {
     }
 
     @Test
-    void createOrder_ShouldSaveOrderToRepository(){
+    void createOrder_ShouldSaveOrderToRepository() {
 
-        RepairOrder newOrder= carService.createOrder(car,client);
+        RepairOrder newOrder = carService.createOrder(car, client);
 
 
         verify(orderRepositoryMock).save(newOrder);
@@ -49,9 +49,9 @@ public class CarServiceTest {
     }
 
     @Test
-    void processCommercialCalculator_ShouldUseCalculatorAndPrintOut(){
+    void processCommercialCalculator_ShouldUseCalculatorAndPrintOut() {
 
-        RepairOrder order = new RepairOrder(car,client);
+        RepairOrder order = new RepairOrder(car, client);
         order.addTask(new Task("Test", new BigDecimal("100.00"), new BigDecimal("50.00")));
 
         when(orderRepositoryMock.findById(order.getId())).thenReturn(Optional.of(order));
@@ -64,7 +64,7 @@ public class CarServiceTest {
     }
 
     @Test
-    void updateOrder_ShouldCallRepositorySave(){
+    void updateOrder_ShouldCallRepositorySave() {
 
         RepairOrder order = new RepairOrder(car, client);
 
@@ -101,7 +101,7 @@ public class CarServiceTest {
     }
 
     @Test
-    void createOrder_WithUnregisteredCar_ShouldThrowException(){
+    void createOrder_WithUnregisteredCar_ShouldThrowException() {
         Car unregisteredCar = new Car("VIN123", "Toyota", "Camry", 2020, client);
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
@@ -112,7 +112,7 @@ public class CarServiceTest {
     }
 
     @Test
-    void createOrder_WithUnregisteredClient_ShouldThrowException(){
+    void createOrder_WithUnregisteredClient_ShouldThrowException() {
         Client unregisteredClient = new Client("Max", "713632");
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
@@ -123,7 +123,7 @@ public class CarServiceTest {
     }
 
     @Test
-    void registerCar_WithAlreadyRegisteredVIN_ShouldThrowException(){
+    void registerCar_WithAlreadyRegisteredVIN_ShouldThrowException() {
         Car car1 = new Car("VIN2436", "Toyota", "Camry", 2020, client);
         Car car2 = new Car("VIN2436", "BMW", "X5", 2020, client);
 

@@ -21,7 +21,7 @@ public class StandardPricingCalculatorTest {
 
     @ParameterizedTest
     @MethodSource("providePrices")
-    void calculateCommercialPrice_ShouldApplyCorrectRules(BigDecimal basePrice, BigDecimal expectedPrice) {
+    void calculateCommercialPrice_shouldApplyCorrectRules(BigDecimal basePrice, BigDecimal expectedPrice) {
         BigDecimal actualPrice = calculator.calculateCommercialPrice(basePrice);
 
         assertEquals(0, expectedPrice.compareTo(actualPrice));

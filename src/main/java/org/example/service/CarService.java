@@ -6,6 +6,7 @@ import org.example.domain.Client;
 import org.example.domain.Mechanic;
 import org.example.domain.RepairOrder;
 import org.example.pricing.PriceCalculator;
+import org.example.repository.InMemoryRepairOrderRepository;
 import org.example.repository.RepairOrderRepository;
 
 import java.math.BigDecimal;
@@ -15,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CarService {
 
-    private final RepairOrderRepository orderRepository;
+    private final RepairOrderRepository orderRepository = new InMemoryRepairOrderRepository();
     private final PriceCalculator priceCalculator;
 
     private List<Car> cars = new ArrayList<>();

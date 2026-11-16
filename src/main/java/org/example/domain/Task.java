@@ -1,7 +1,10 @@
 package org.example.domain;
 
+import lombok.Getter;
+
 import java.math.BigDecimal;
 
+@Getter
 public class Task {
     private String description;
     private BigDecimal detailPrice;
@@ -21,22 +24,6 @@ public class Task {
             throw new IllegalArgumentException("Work price cannot be null or negative.");
         }
         this.workPrice = workPrice;
-    }
-
-    public int getTime() {
-        return time;
-    }
-
-    public BigDecimal getDetailPrice() {
-        return detailPrice;
-    }
-
-    public BigDecimal getWorkPrice() {
-        return workPrice;
-    }
-
-    public boolean isCompleted() {
-        return isCompleted;
     }
 
     public void setDescription(String description) {
